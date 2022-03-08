@@ -144,6 +144,11 @@
   resolved "https://registry.yarnpkg.com/@rushstack/eslint-patch/-/eslint-patch-1.1.0.tgz#7f698254aadf921e48dda8c0a6b304026b8a9323"
   integrity sha512-JLo+Y592QzIE+q7Dl2pMUtt4q8SKYI5jDrZxrozEQxnGVOyYE+GWK9eLkwTaeN9DDctlaRAQ3TBmzZ1qdLE30A==
 
+"@swc/helpers@0.2.14":
+  version "0.2.14"
+  resolved "https://registry.yarnpkg.com/@swc/helpers/-/helpers-0.2.14.tgz#20288c3627442339dd3d743c944f7043ee3590f0"
+  integrity sha512-wpCQMhf5p5GhNg2MmGKXzUNwxe7zRiCsmqYsamez2beP7mKPCSiu+BjZcdN95yYSzO857kr0VfQewmGpS77nqA==
+
 "@types/json5@^0.0.29":
   version "0.0.29"
   resolved "https://registry.yarnpkg.com/@types/json5/-/json5-0.0.29.tgz#ee28707ae94e11d2b827bcbe5270bcea7f3e71ee"
@@ -1141,6 +1146,23 @@ json5@^1.0.1:
     array-includes "^3.1.3"
     object.assign "^4.1.2"
 
+kalend-layout@0.0.9:
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/kalend-layout/-/kalend-layout-0.0.9.tgz#3393e27e608a395cf0a5b62835a8352a6664f356"
+  integrity sha512-9JqTQSTAzp/7SHur5HioPcOjcbMuThpgnFl9nQasWJos3yfChtl0Wek5rqzF2Apm+twTNmJFW4NSBXKVFIa6Pg==
+  dependencies:
+    luxon "2.1.1"
+
+kalend@^0.9.7:
+  version "0.9.7"
+  resolved "https://registry.yarnpkg.com/kalend/-/kalend-0.9.7.tgz#f9918d543ac32b12da010b2dde8ebaa68d2ff421"
+  integrity sha512-PeMeO1CuLkwUAYh3MVTHTeykjsUb0SrEjjYxMge8d2YQo34zAaCadbj78qu2NiYxbqXcbXN6bJ7OKoNL6ntHRA==
+  dependencies:
+    "@swc/helpers" "0.2.14"
+    kalend-layout "0.0.9"
+    luxon "2.1.1"
+    regenerator-runtime "0.13.9"
+
 language-subtag-registry@~0.3.2:
   version "0.3.21"
   resolved "https://registry.yarnpkg.com/language-subtag-registry/-/language-subtag-registry-0.3.21.tgz#04ac218bea46f04cb039084602c6da9e788dd45a"
@@ -1187,6 +1209,11 @@ lru-cache@^6.0.0:
   integrity sha512-Jo6dJ04CmSjuznwJSS3pUeWmd/H0ffTlkXXgwZi+eq1UCmqQwCh+eLsYOYCwY991i2Fah4h1BEMCx4qThGbsiA==
   dependencies:
     yallist "^4.0.0"
+
+luxon@2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/luxon/-/luxon-2.1.1.tgz#34052f7a33a7989767637be7cf80b47db264ff88"
+  integrity sha512-6VQVNw7+kQu3hL1ZH5GyOhnk8uZm21xS7XJ/6vDZaFNcb62dpFDKcH8TI5NkoZOdMRxr7af7aYGrJlE/Wv0i1w==
 
 merge2@^1.3.0, merge2@^1.4.1:
   version "1.4.1"
@@ -1530,7 +1557,7 @@ readdirp@~3.6.0:
   dependencies:
     picomatch "^2.2.1"
 
-regenerator-runtime@^0.13.4:
+regenerator-runtime@0.13.9, regenerator-runtime@^0.13.4:
   version "0.13.9"
   resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.13.9.tgz#8925742a98ffd90814988d7566ad30ca3b263b52"
   integrity sha512-p3VT+cOEgxFsRRA9X4lkI1E+k2/CtnKtU4gcxyaCUreilL/vqI6CdZ3wxVUx3UOUg+gnUOQQcRI7BmSI656MYA==
