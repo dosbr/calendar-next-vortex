@@ -9,7 +9,7 @@ export default async (req : NextApiRequest, res :NextApiResponse ) => {
     if(req.method === 'POST') {
         const session = await getSession({ req })
         
-       const response = await axios.get(`https://www.googleapis.com/calendar/v3/calendars/primary/events?timeMin=${new Date().toISOString()}`,     {
+       const response = await axios.get(`https://www.googleapis.com/calendar/v3/calendars/primary/events?timeMin=${new Date('01-03-2022').toISOString()}`,     {
             headers: {'Authorization': `Bearer ${session.accessToken}`}
        })
 
