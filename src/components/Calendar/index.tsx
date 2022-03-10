@@ -1,5 +1,6 @@
 import styles from './styles.module.scss';
 import { useRef, useState } from 'react';
+import ptBR from '../../util/pt-BR.json'; 
 import Kalend, { CalendarEvent, CalendarView, OnPageChangeData, OnSelectViewData } from 'kalend';
 
 interface event {
@@ -67,7 +68,7 @@ export default function Calendar ({ events } : CalendarProps) {
               timeFormat={'24'}
               weekDayStart={'Monday'}
               calendarIDsHidden={['work']}
-              language={'en'}
+              customLanguage={ptBR}
           />
         </div>
     )
