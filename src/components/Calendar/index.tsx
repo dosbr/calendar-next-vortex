@@ -1,9 +1,9 @@
 import styles from './styles.module.scss';
-import { useRef, useState } from 'react';
 import ptBR from '../../util/pt-BR.json'; 
 import Kalend, { CalendarEvent, CalendarView, OnPageChangeData, OnSelectViewData } from 'kalend';
+import { useRouter } from 'next/router';
 
-interface event {
+type event = {
   id:  string;
   startAt: string;
   endAt: string;
@@ -13,43 +13,51 @@ interface event {
   [key: string]: any;
 }
 
-interface CalendarProps {
-   events : event []
+type OnNewEventClickData = {
+  event: CalendarEvent;
+  day: Date;
+  hour: number;
 }
 
 
-export default function Calendar ({ events } : CalendarProps) {
-   
-    type OnNewEventClickData = {
-        event: CalendarEvent;
-        day: Date;
-        hour: number;
-      }
-      
-      type OnEventClickData = {
-        startAt: string;
-        endAt: string;
-        timezoneStartAt?: string;
-        timezoneEndAt?: string;
-        summary: string;
-        color: string;
-        [key: string]: any;
-      }
+interface CalendarProps {
+   events : any []
+}
 
+
+
+export default function Calendar ({ events } : CalendarProps) {
+      const router = useRouter()
 
       
      const onNewEventClick = (data: OnNewEventClickData) => {
        console.log(data)
      };  
 
-     const onEventClick = (data: OnEventClickData) => {
-       console.log(data)
+     const onEventClick = (data: event) => {
+       console.log({
+        color: data.color,
+        creator: data.creator,
+        endAt: data.endAt,
+        eventType: data.eventType,
+        id: data.id,
+        organizer: data.organizer,
+        reminders: data.reminders,
+        sequence: data.sequence,
+        startAt: data.startAt,
+        status: data.status,
+        summary: data.summary,
+       })
+       router.push({
+         pathname: '/create_event',
+         body: data
+       })
      };
      const onSelectView = (view: OnSelectViewData) => {
        console.log(view)
+
      }
      const onPageChange = (data: OnPageChangeData) => {
-       // do something
        console.log(data)
      }
 
