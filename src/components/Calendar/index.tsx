@@ -50,7 +50,6 @@ export default function Calendar ({ events } : CalendarProps) {
        })
        router.push({
          pathname: '/create_event',
-         body: data
        })
      };
      const onSelectView = (view: OnSelectViewData) => {
