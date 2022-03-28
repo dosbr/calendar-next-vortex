@@ -44,12 +44,21 @@ interface HomeProps {
 
 export default function Home({ signIn } : HomeProps) {
   const [events, setEvents] = useState<event[]>([])
+  const [colors, setColors] = useState({})
 
   async function updateCalendar() {
     const response = await api.post<responseData>('/calendar')
 
     const { colorsEvents, calendarEvents } = response.data
     console.log(response.data)
+    console.log(colorsEvents)
+
+    if(colorsEvents) {
+      setColors({
+        default: 'blue',
+        ...colorsEvents
+      })
+    }
 
     if (calendarEvents.length) {
       setEvents(calendarEvents.map((item: responseData) => ({
@@ -74,7 +83,7 @@ export default function Home({ signIn } : HomeProps) {
 
   return (
     <main className={styles.contentContainer} >
-      { signIn ? <Calendar events={events} /> : <h1>Login Required</h1>}
+      { signIn ? <Calendar events={events} colors={Object.entries(colors)} updateCalendar={updateCalendar} /> : <h1>Login Required</h1>}
     </main>
   )
 }

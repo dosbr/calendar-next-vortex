@@ -6,8 +6,9 @@ import axios from "axios";
 
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
+    const session = await getSession({ req })
     if (req.method === 'POST') {
-        const session = await getSession({ req })
+        
         try {
             console.log(req.body)
             const response = await axios.post(`https://www.googleapis.com/calendar/v3/calendars/primary/events`, req.body, {
@@ -21,10 +22,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         }
 
     } else if (req.method === 'PUT') {
-        const session = await getSession({ req })
         try {
-            console.log(req.body)
-            const response = await axios.put(`https://www.googleapis.com/calendar/v3/calendars/primary/events`, req.body, {
+            const response = await axios.patch(`https://www.googleapis.com/calendar/v3/calendars/primary/events/${req.body.id}`, req.body, {
                 headers: { 'Authorization': `Bearer ${session.accessToken}` },
             })
 
