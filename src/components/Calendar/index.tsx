@@ -3,7 +3,7 @@ import ptBR from '../../util/pt-BR.json';
 import Kalend, { CalendarEvent, CalendarView, OnPageChangeData, OnSelectViewData } from 'kalend';
 import { useRouter } from 'next/router';
 import { background, Button, Container, Flex, FormLabel, HStack, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Select, Tag, TagCloseButton, TagLabel, Textarea, useDisclosure, Wrap, WrapItem } from '@chakra-ui/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { api } from '../../pages/services/api';
 
 type event = {
@@ -54,12 +54,15 @@ export default function Calendar({ events, colors, updateCalendar }: CalendarPro
 
 
   const onNewEventClick = (data: OnNewEventClickData) => {
+    const date = data.day.toISOString().split('T')[0]
+    const startHour = data.hour.toString().split('.')[0]
+    const startHourFormatted = startHour.length === 2 ? `${startHour}:00:00` : `0${startHour}:00:00`
+    console.log(startHourFormatted)
     setTitle('')
     setDescription('')
-    setStartDate('');
-    setSEndDate('');
-    setStartHour('');
-    setEndHour('');
+    setStartDate(date);
+    setSEndDate(date);
+    setStartHour(startHourFormatted);
     setAttendees([])
     setStatus(true)
     setModifyDate(true)
@@ -67,22 +70,24 @@ export default function Calendar({ events, colors, updateCalendar }: CalendarPro
     onOpen()
   };
 
+
+
   const onEventClick = (data: event) => {
-    // console.log({
-    //   color: data.color,
-    //   creator: data.creator,
-    //   endAt: data.endAt,
-    //   eventType: data.eventType,
-    //   id: data.id,
-    //   organizer: data.organizer,
-    //   reminders: data.reminders,
-    //   sequence: data.sequence,
-    //   startAt: data.startAt,
-    //   status: data.status,
-    //   summary: data.summary,
-    //   description: data.description,
-    //   attendees: data.attendees
-    // })
+    console.log({
+      color: data.color,
+      creator: data.creator,
+      endAt: data.endAt,
+      eventType: data.eventType,
+      id: data.id,
+      organizer: data.organizer,
+      reminders: data.reminders,
+      sequence: data.sequence,
+      startAt: data.startAt,
+      status: data.status,
+      summary: data.summary,
+      description: data.description,
+      attendees: data.attendees
+    })
 
     const [startDate, startHour] = data.startAt.split('T')
     const [endtDate, endHour] = data.endAt.split('T')
@@ -104,7 +109,7 @@ export default function Calendar({ events, colors, updateCalendar }: CalendarPro
     } else {
       setAttendees([])
     }
-
+    console.log('chamei')
     onOpen()
   };
   const onSelectView = (view: OnSelectViewData) => {
@@ -179,6 +184,12 @@ export default function Calendar({ events, colors, updateCalendar }: CalendarPro
   const handleEditDate = () => {
     setModifyDate(true)
   }
+
+  useEffect(() => {
+    const hourNumber = Number(startHour.split(':')[0]) + 1
+    const hourFormatted = hourNumber < 10 ?`0${hourNumber}:00:00` : `${hourNumber}:00:00`
+    setEndHour(hourFormatted)
+  }, [startHour])
 
   return (
     <div className={styles.calendar_container}>

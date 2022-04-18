@@ -12,13 +12,14 @@ function MyApp({
 
   return (
     <>
+      
     <SessionProvider session={session}>
       <ChakraProvider>
-        <Header />
-        <Component {...pageProps} />
-      </ChakraProvider>
-        
+          <Header />
+          <Component {...pageProps} />
+        </ChakraProvider>
     </SessionProvider>
+    
     </>
   )
 }

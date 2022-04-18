@@ -16,7 +16,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             const responseColors = await axios.get(`https://www.googleapis.com/calendar/v3/colors`, {
                 headers: {'Authorization': `Bearer ${session.accessToken}`}
             })
-        
+            session.events = [...response.data.items]
             return res.status(200).json({
                     colorsEvents: responseColors.data.event,
                     calendarEvents: response.data.items
