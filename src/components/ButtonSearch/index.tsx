@@ -17,14 +17,11 @@ export default function ButtonSearch() {
     function handleSearch() {
 
     }
-
     return (
-
         <>
             <Button bgColor="#1f2729"
                 h={50}
                 borderRadius='full'
-                alignSelf="flex-end"
                 ref={btnRef}
                 onClick={onOpen}
             >
@@ -89,7 +86,6 @@ export default function ButtonSearch() {
             </DrawerBody>
             </DrawerContent>
             </Drawer>
-            
         </>
     )
 }
