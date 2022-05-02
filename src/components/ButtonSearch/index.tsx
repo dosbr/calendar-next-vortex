@@ -1,12 +1,22 @@
-import { Button, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerOverlay, Flex, FormLabel, HStack, Icon, Input, Tag, TagCloseButton, TagLabel, useDisclosure, Wrap, WrapItem } from "@chakra-ui/react"
+import { Accordion, AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Box, Button, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerOverlay, Flex, FormLabel,  Icon,  Select,  useDisclosure } from "@chakra-ui/react"
 import { useRef, useState } from "react"
+import { useForm } from "react-hook-form"
 import { RiSearchLine } from "react-icons/ri"
+import { api } from "../../pages/services/api"
 
-export default function ButtonSearch() {
+
+interface ButtonSearchProps {
+    events: any []
+}
+
+export default function ButtonSearch({events} : ButtonSearchProps)  {
+    const {handleSubmit, register} = useForm()
     const { isOpen, onOpen, onClose } = useDisclosure()
     const btnRef = useRef()
 
     const [searchList, setSearchList] = useState([])
+    const [option, setOption] = useState('')
+
     const [title, setTitle] = useState('')
     const [startDate, setStartDate] = useState('')
     const [endDate, setSEndDate] = useState('')
@@ -14,9 +24,14 @@ export default function ButtonSearch() {
     const [endHour, setEndHour] = useState('')
     const [attendees, setAttendees] = useState([])
 
-    function handleSearch() {
-
+    async function handleSearch(data) {
+        const response = await api.get(`/event?calendarId=${data.calendarId}`)
+        console.log(response)
+        if(response.status === 200) {
+            setSearchList(response.data)
+        }
     }
+    
     return (
         <>
             <Button bgColor="#1f2729"
@@ -45,42 +60,44 @@ export default function ButtonSearch() {
                 <DrawerBody>
                     <Flex p={5} mt={5} h='100%'>
                     <Flex direction='column' w='100%' mt={10}>
-                        <FormLabel>Titulo</FormLabel>
-                        <Input placeholder='Titulo' defaultValue={title} size='lg' onChange={(event) => setTitle(event.target.value)} />
-                        <Flex as='label' mb={0} mt={6}>Inicio</Flex>
-                        <Flex justifyContent={'space-between'}>
-                            <Input type={'date'} defaultValue={startDate} size='lg' 
-                                onChange={(event) => setStartDate(event.target.value)} />
-                            <Input type={'time'} defaultValue={startHour} placeholder='large size' size='lg' ml={2} 
-                                onChange={(event) => setStartHour(event.target.value)} />
-                        </Flex>
-                        <Flex as='label' mb={0} mt={6}>Final</Flex>
-                        <Flex justifyContent={'space-between'}>
-                            <Input type={'date'} defaultValue={endDate} size='lg' 
-                                onChange={(event) => setSEndDate(event.target.value)} />
-                            <Input type={'time'} defaultValue={endHour} placeholder='large size' size='lg' ml={2} 
-                                onChange={(event) => setEndHour(event.target.value)} />
-                        </Flex>
-                        <FormLabel mb={0} mt={6}>Participantes</FormLabel>
-                        <Flex>
-                            <Input placeholder='E-mail' size='lg' />
-                            <Button size='lg' ml={2}  >Adicionar</Button>
-                        </Flex>
-                        <HStack spacing={4} mt={6}>
-                            <Wrap>
-                                {attendees.map((attendeer) => (
-                                    <WrapItem key={attendeer.email}>
-                                        <Tag size='lg' borderRadius='full' variant='solid' colorScheme='green'>
-                                            <TagLabel>{attendeer.email}</TagLabel>
-                                            <TagCloseButton />
-                                        </Tag>
-                                    </WrapItem>
-                                ))}
-                            </Wrap>
-                        </HStack>
-                        <Button mt={10} colorScheme='blue' onClick={handleSearch}>Buscar</Button>
+                        <form onSubmit={handleSubmit(handleSearch)}>
+                        <FormLabel>Cliente</FormLabel>
+                        <Select {...register('calendarId')} size='lg'>
+                            <option value='all'>Todos</option>
+                            {events.reduce((acc, item) => {
+                               const e = acc.find(e => e.calendarId === item.calendarId)
+                               if(!e){
+                                   acc.push({
+                                    calendarId : item.calendarId,
+                                    calendarSummary: item.calendarSummary,
+                                   })
+                               }
+                               return acc 
+                            } , []).map(item => (<option key={item.calendarId} value={item.calendarId}>{item.calendarSummary}</option>))}
+                        </Select>
+                        <Button type='submit' mt={10} colorScheme='blue' >Buscar</Button>
+                        </form>
                     </Flex>
                     <Flex ml={10} mt={10} direction='column' alignItems='center' w='100%'>
+                        <Accordion w="100%" defaultIndex={[0]} allowMultiple>
+                            {
+                                searchList.map(item => (
+                                    <AccordionItem key={item.id} mt={6} >
+                                        <h2>
+                                        <AccordionButton>
+                                            <Box flex='1' textAlign='left'>
+                                            {item.summary}
+                                            </Box>
+                                            <AccordionIcon />
+                                        </AccordionButton>
+                                        </h2>
+                                        <AccordionPanel pb={4}>
+                                            
+                                        </AccordionPanel>
+                                    </AccordionItem>
+                                ))
+                            }
+                        </Accordion>    
                     </Flex>
                 </Flex>
             </DrawerBody>

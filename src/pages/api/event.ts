@@ -1,4 +1,3 @@
-
 import { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/react";
 
@@ -7,7 +6,21 @@ import axios from "axios";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
     const session = await getSession({ req })
-    if (req.method === 'POST') {
+    if (req.method === 'GET') {
+        const { calendarId } = req.query
+        try {
+            console.log(req.body)
+            const response = await axios.get(`https://www.googleapis.com/calendar/v3/calendars/${calendarId}/events`, {
+                headers: { 'Authorization': `Bearer ${session.accessToken}` },
+            })
+            session.events = response.data.items
+            return res.status(200).json(response.data.items)
+        }
+        catch (error) {
+            console.log(error.message)
+        }
+
+    } else if (req.method === 'POST') {
         
         try {
             console.log(req.body)
@@ -35,8 +48,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
     } else if (req.method === 'DELETE') {
         try {
-            const {id} = req.query
-            const response = await axios.delete(`https://www.googleapis.com/calendar/v3/calendars/primary/events/${id}`, {
+            const {id, calendarId} = req.query
+            const response = await axios.delete(`https://www.googleapis.com/calendar/v3/calendars/${calendarId}/events/${id}`, {
                 headers: { 'Authorization': `Bearer ${session.accessToken}` },
             })
             session.events = response.data.items

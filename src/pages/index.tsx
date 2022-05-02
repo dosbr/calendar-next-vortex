@@ -19,7 +19,7 @@ interface HomeProps {
 
 export default function Home({ signIn } : HomeProps) {
   const router = useRouter()
-  const { events, colors, updateCalendar } = useContext(EventsContext)
+  const { events, updateCalendar } = useContext(EventsContext)
 
   useEffect(() => {
     if(signIn) {
@@ -31,7 +31,7 @@ export default function Home({ signIn } : HomeProps) {
 
   return (
     <main className={styles.contentContainer} >
-      <Calendar events={events} colors={Object.entries(colors)} updateCalendar={updateCalendar} /> 
+      <Calendar events={events} updateCalendar={updateCalendar} /> 
     </main>
   )
 }

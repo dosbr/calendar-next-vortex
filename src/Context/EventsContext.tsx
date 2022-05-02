@@ -13,7 +13,7 @@ interface event {
     summary: string;
     color: string;
     [key: string]: any;
-  }
+}
   
 interface responseData {
     id: string,
@@ -31,7 +31,6 @@ interface responseData {
 
 interface EventsContextData {
     events : event[];
-    colors : {}
     updateCalendar : () => void
 }
 
@@ -42,35 +41,35 @@ export const EventsContext = createContext(
 
 export function EventsProvider({ children }: EventsProviderProps) {
     const [events, setEvents] = useState<event[]>([])
-    const [colors, setColors] = useState({})
     
     async function updateCalendar() {
         const response = await api.post<responseData>('/calendar')
-    
-        const { colorsEvents, calendarEvents } = response.data
-    
-        if(colorsEvents) {
-          setColors({
-            default: 'blue',
-            ...colorsEvents
-          })
-        }
-    
+        
+        const { calendarEvents } = response.data
+
         if (calendarEvents.length) {
-          setEvents(calendarEvents.map((item: responseData) => ({
-            id: item.id,
-            startAt: item.start.dateTime,
-            endAt: item.end.dateTime,
-            timezoneStartAt: item.start.timeZone,
-            summary: item.summary,
-            color: item.colorId ? colorsEvents[item.colorId].background : 'blue',
-            ...item
-          })))
-        }
+          const response = []
+          for (let calendar of calendarEvents) {
+            response.push(...calendar.events.map((item: responseData) => ({
+              id: item.id,
+              calendarSummary: calendar.primary ? "Meu Calendario" : calendar.summary,
+              calendarId: calendar.id,
+              startAt: item.start.dateTime,
+              endAt: item.end.dateTime,
+              timezoneStartAt: item.start.timeZone,
+              summary: item.summary,
+              color: calendar.backgroundColor,
+              attachments: item.attatchments || [],
+              ...item
+            })))
+          }
+          console.log(response)
+          setEvents(response)
+          }   
       }
 
     return (
-        <EventsContext.Provider value={{ events, colors, updateCalendar }}>
+        <EventsContext.Provider value={{ events, updateCalendar }}>
             {children}
         </EventsContext.Provider>
     )

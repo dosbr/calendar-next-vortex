@@ -7,20 +7,13 @@ import ButtonSearch from '../ButtonSearch';
 import ButtonRefresh from '../ButtonRefresh';
 import { SignInButton } from '../SignInButton';
 import { EventsContext } from '../../Context/EventsContext';
+import { GetServerSideProps } from 'next';
+import { getSession } from 'next-auth/react';
 
-type event = {
-    id: string;
-    startAt: string;
-    endAt: string;
-    timezoneStartAt: string;
-    summary: string;
-    color: string;
-    [key: string]: any;
-}
+
 
 export function Header() {
-    const { updateCalendar } = useContext(EventsContext)
-
+    const { updateCalendar, events } = useContext(EventsContext)
     return (
         <div className={styles.headerContainer}>
             <div className={styles.headerContent}>
@@ -31,10 +24,25 @@ export function Header() {
                     justifyContent="flex-end"
                 >
                 <ButtonRefresh fn={updateCalendar} />
-                <ButtonSearch />
+                <ButtonSearch  events={events} />
                 <SignInButton />
                 </Flex>
             </div>
         </div>
     )
 }
+
+export const getServerSideProps : GetServerSideProps = async ({ req, res }) => {
+    const session = await getSession({ req })
+    let signIn = false
+  
+    if(session){
+      signIn = true
+    }
+    
+    return {
+      props: {
+        signIn,
+      }
+    }
+  }

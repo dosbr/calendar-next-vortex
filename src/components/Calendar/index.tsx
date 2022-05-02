@@ -1,8 +1,8 @@
 import styles from './styles.module.scss';
 import ptBR from '../../util/pt-BR.json';
 import Kalend, { CalendarEvent, CalendarView, OnPageChangeData, OnSelectViewData } from 'kalend';
-import { RiDeleteBinLine } from "react-icons/ri"
-import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Button, Container, Flex, FormControl, FormLabel, HStack, Icon, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Select, Tag, TagCloseButton, TagLabel, Textarea, useDisclosure, Wrap, WrapItem } from '@chakra-ui/react';
+import { RiDeleteBinLine, RiAttachmentLine, RiCloseCircleLine } from "react-icons/ri"
+import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Button, Container, Flex, FormControl, FormLabel, HStack, Icon, Input, Link, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Select, Tag, TagCloseButton, TagLabel, Textarea, useDisclosure, Wrap, WrapItem } from '@chakra-ui/react';
 import { useEffect, useRef, useState } from 'react';
 import { api } from '../../pages/services/api';
 import DateHourInput from '../DateHourInput';
@@ -34,15 +34,15 @@ type OnNewEventClickData = {
 
 interface CalendarProps {
   events: any[]
-  colors: any[]
   updateCalendar: () => void;
 }
 
-export default function Calendar({ events, colors, updateCalendar }: CalendarProps) {
+export default function Calendar({ events, updateCalendar }: CalendarProps) {
   const cancelRef = useRef()
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const [id, setId] = useState('')
+  const [calendarId, setCalendarId] = useState('')
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [startDate, setStartDate] = useState('')
@@ -51,6 +51,7 @@ export default function Calendar({ events, colors, updateCalendar }: CalendarPro
   const [endHour, setEndHour] = useState('')
   const [organizer, setOrganizer] = useState('')
   const [attendees, setAttendees] = useState([])
+  const [attachments, setAttachments] = useState([])
   const [status, setStatus] = useState(false)
   const [modifyDate, setModifyDate] = useState(false)
   const [alertOpen, setAlertOpen] = useState(false)
@@ -61,14 +62,18 @@ export default function Calendar({ events, colors, updateCalendar }: CalendarPro
     const startHour = data.hour.toString().split('.')[0]
     const startHourFormatted = startHour.length === 2 ? `${startHour}:00:00` : `0${startHour}:00:00`
     console.log(startHourFormatted)
-    setTitle('')
+    setTitle('');
+    setCalendarId('');
+    setId('');
     setDescription('')
     setStartDate(date);
     setSEndDate(date);
     setStartHour(startHourFormatted);
     setAttendees([])
+    setAttachments([])
     setStatus(true)
     setModifyDate(true)
+    setOrganizer('')
     onOpen()
   };
 
@@ -94,6 +99,7 @@ export default function Calendar({ events, colors, updateCalendar }: CalendarPro
     const [endtDate, endHour] = data.endAt.split('T')
 
     setId(data.id)
+    setCalendarId(data.calendarId)
     setTitle(data.summary)
     setDescription(data.description)
     setModifyDate(false)
@@ -102,6 +108,7 @@ export default function Calendar({ events, colors, updateCalendar }: CalendarPro
     setStartHour(startHour.split('-')[0])
     setEndHour(endHour.split('-')[0])
     setOrganizer(data.organizer.email)
+    setAttachments([...data.attachments])
     setStatus(false)
 
     if (data.attendees) {
@@ -144,7 +151,7 @@ export default function Calendar({ events, colors, updateCalendar }: CalendarPro
   }
 
   const handleDeleteEvent = async () => {
-      await api.delete(`/event?id=${id}`)
+      await api.delete(`/event?id=${id}&calendarId=${calendarId}`)
       setAlertOpen(false)
       onClose()
       updateCalendar()
@@ -204,6 +211,7 @@ export default function Calendar({ events, colors, updateCalendar }: CalendarPro
           <ModalHeader>Evento</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
+          <form>
           <FormControl>
             <FormLabel>Titulo</FormLabel>
             <Input placeholder='Titulo' defaultValue={title} size='lg' onChange={(event) => setTitle(event.target.value)} />
@@ -224,10 +232,22 @@ export default function Calendar({ events, colors, updateCalendar }: CalendarPro
 
             <FormLabel mb={0} mt={6}>Organizador</FormLabel>
             <Input disabled defaultValue={organizer} size='lg' onChange={(event) => setOrganizer(event.target.value)} />
+            
+            {
+              attachments.length 
+                ? <>
+                    <FormLabel mb={0} mt={3}>Anexo</FormLabel>
+                    <Link href={attachments[0].fileUrl} isExternal cursor='pointer' >
+                      <Icon mt={3} as={RiAttachmentLine} color="#3182CE" fontSize={25} />
+                    </Link> 
+                  </> 
+                : <></>
+            }
+            
             <FormLabel mb={0} mt={6}>Participantes</FormLabel>
             <Flex>
               <Input placeholder='E-mail' size='lg' />
-              <Button size='lg' ml={2} onClick={handleAddAttendees} >Adicionar</Button>
+              <Button size='lg' ml={2} onClick={handleAddAttendees}>Adicionar</Button>
             </Flex>
             <HStack spacing={4} mt={6}>
               <Wrap>
@@ -256,6 +276,7 @@ export default function Calendar({ events, colors, updateCalendar }: CalendarPro
                 </>
             }
           </FormControl>
+          </form>
           </ModalBody>
         </ModalContent>
       </Modal>

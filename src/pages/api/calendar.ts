@@ -8,23 +8,33 @@ import axios from "axios";
 export default async (req: NextApiRequest, res: NextApiResponse) => {
     if (req.method === 'POST') {
         const session = await getSession({ req })
-        try {
-            const response = await axios.get(`https://www.googleapis.com/calendar/v3/calendars/primary/events?timeMin=${new Date('03-01-2022').toISOString()}`, {
+            const calendarEvents = []
+            
+            const calendarList = await axios.get(`https://www.googleapis.com/calendar/v3/users/me/calendarList`, {
                 headers: {'Authorization': `Bearer ${session.accessToken}`}
             })
+            
+            for(let calendar of calendarList.data.items) {
+                try {
+                    const response = await axios.get(`https://www.googleapis.com/calendar/v3/calendars/${calendar.id}/events?timeMin=${new Date('03-01-2022').toISOString()}`, {
+                    headers: {'Authorization': `Bearer ${session.accessToken}`}
+                    })
+                    console.log(response.status)
+                    if(response.status === 200) {
+                        calendarEvents.push({
+                            ...calendar,
+                            events: [...response.data.items]
+                        })
+                    }
+                }catch (err) {
+                    console.log(`Falha no request id: ${calendar.id} | status: ${err.response.status}`)
+                }     
 
-            const responseColors = await axios.get(`https://www.googleapis.com/calendar/v3/colors`, {
-                headers: {'Authorization': `Bearer ${session.accessToken}`}
-            })
-            session.events = [...response.data.items]
+            }
+
             return res.status(200).json({
-                    colorsEvents: responseColors.data.event,
-                    calendarEvents: response.data.items
+                    calendarEvents
                 })
-        }
-        catch (error) {
-            console.log(error.message)
-        }
 
     } else {
         res.setHeader('Allow', 'POST')
