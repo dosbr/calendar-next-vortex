@@ -7,6 +7,7 @@ import { useRouter } from "next/router";
 import styles from './home.module.scss';
 
 import { EventsContext } from "../Context/EventsContext";
+import { Header } from "../components/Header";
 
 const Calendar = dynamic(
   () => import("../components/Calendar"),
@@ -30,9 +31,12 @@ export default function Home({ signIn } : HomeProps) {
   }, [])
 
   return (
-    <main className={styles.contentContainer} >
-      <Calendar events={events} updateCalendar={updateCalendar} /> 
-    </main>
+    <>
+      <Header />
+      <main className={styles.contentContainer} >
+        <Calendar events={events} updateCalendar={updateCalendar} /> 
+      </main>
+    </>
   )
 }
 

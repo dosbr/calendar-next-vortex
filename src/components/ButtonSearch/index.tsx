@@ -15,14 +15,6 @@ export default function ButtonSearch({events} : ButtonSearchProps)  {
     const btnRef = useRef()
 
     const [searchList, setSearchList] = useState([])
-    const [option, setOption] = useState('')
-
-    const [title, setTitle] = useState('')
-    const [startDate, setStartDate] = useState('')
-    const [endDate, setSEndDate] = useState('')
-    const [startHour, setStartHour] = useState('')
-    const [endHour, setEndHour] = useState('')
-    const [attendees, setAttendees] = useState([])
 
     async function handleSearch(data) {
         const response = await api.get(`/event?calendarId=${data.calendarId}`)
@@ -52,7 +44,7 @@ export default function ButtonSearch({events} : ButtonSearchProps)  {
             placement='right'
             onClose={onClose}
             finalFocusRef={btnRef}
-            size='xl'
+            size='md'
         >
             <DrawerOverlay />
             <DrawerContent>
@@ -78,27 +70,7 @@ export default function ButtonSearch({events} : ButtonSearchProps)  {
                         <Button type='submit' mt={10} colorScheme='blue' >Buscar</Button>
                         </form>
                     </Flex>
-                    <Flex ml={10} mt={10} direction='column' alignItems='center' w='100%'>
-                        <Accordion w="100%" defaultIndex={[0]} allowMultiple>
-                            {
-                                searchList.map(item => (
-                                    <AccordionItem key={item.id} mt={6} >
-                                        <h2>
-                                        <AccordionButton>
-                                            <Box flex='1' textAlign='left'>
-                                            {item.summary}
-                                            </Box>
-                                            <AccordionIcon />
-                                        </AccordionButton>
-                                        </h2>
-                                        <AccordionPanel pb={4}>
-                                            
-                                        </AccordionPanel>
-                                    </AccordionItem>
-                                ))
-                            }
-                        </Accordion>    
-                    </Flex>
+                  
                 </Flex>
             </DrawerBody>
             </DrawerContent>

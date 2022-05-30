@@ -2,9 +2,10 @@ import { GetServerSideProps } from "next";
 import { getSession, useSession } from "next-auth/react"
 
 import styles from './home.module.scss';
-import { Box, Container, Flex, Text } from "@chakra-ui/react";
+import { Box, Container, Flex, Image, Text } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
+import { SignInButton } from "../components/SignInButton";
 
 interface HomeProps {
   signIn: boolean;
@@ -16,12 +17,22 @@ export default function SignIn({ signIn } : HomeProps) {
     if(signIn) {
       router.push("/")
     }
+
   }, [])
 
   return (
-    <main>
-
-    </main>
+    <Flex 
+      justify="center"
+      alignItems="center"
+      w="100vw"
+      h="100vh"
+      bg="var(--gray-800)"
+    >
+      <Flex flexDirection="column"  alignItems="center">
+        <Image src="/imagens/logo.png" alt="jm.consultoria" w="150px" mb="5rem" />
+        <SignInButton />
+      </Flex>
+    </Flex>
   )
 }
 

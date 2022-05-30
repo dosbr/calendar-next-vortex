@@ -1,11 +1,17 @@
 import styles from './styles.module.scss';
 import ptBR from '../../util/pt-BR.json';
 import Kalend, { CalendarEvent, CalendarView, OnPageChangeData, OnSelectViewData } from 'kalend';
-import { RiDeleteBinLine, RiAttachmentLine, RiCloseCircleLine } from "react-icons/ri"
-import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Button, Container, Flex, FormControl, FormLabel, HStack, Icon, Input, Link, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Select, Tag, TagCloseButton, TagLabel, Textarea, useDisclosure, Wrap, WrapItem } from '@chakra-ui/react';
-import { useEffect, useRef, useState } from 'react';
+import { RiDeleteBinLine, RiAttachmentLine } from "react-icons/ri"
+
+import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, 
+  AlertDialogOverlay, Button, Container, Flex, FormControl, FormLabel, HStack, Icon, Input, Link, 
+  Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Tag, TagCloseButton, TagLabel, 
+  Textarea, useDisclosure, Wrap, WrapItem } from '@chakra-ui/react';
+
+  import { useEffect, useRef, useState } from 'react';
 import { api } from '../../pages/services/api';
 import DateHourInput from '../DateHourInput';
+import { addHours, format } from 'date-fns';
 
 type event = {
   id: string;
@@ -58,9 +64,13 @@ export default function Calendar({ events, updateCalendar }: CalendarProps) {
 
 
   const onNewEventClick = (data: OnNewEventClickData) => {
-    const date = data.day.toISOString().split('T')[0]
-    const startHour = data.hour.toString().split('.')[0]
-    const startHourFormatted = startHour.length === 2 ? `${startHour}:00:00` : `0${startHour}:00:00`
+    const date = format(data.day, "yyyy-MM-dd")
+    const startHour = Math.floor(data.hour)
+    const endHour = Math.floor(data.hour) + 1
+  
+    const startHourFormatted = startHour >= 10 ? `${startHour}:00` : `0${startHour}:00`
+    const endHourFormatted = endHour >= 10 ? `${endHour}:00` : `0${endHour}:00`
+
     console.log(startHourFormatted)
     setTitle('');
     setCalendarId('');
@@ -69,12 +79,13 @@ export default function Calendar({ events, updateCalendar }: CalendarProps) {
     setStartDate(date);
     setSEndDate(date);
     setStartHour(startHourFormatted);
-    setAttendees([])
-    setAttachments([])
-    setStatus(true)
-    setModifyDate(true)
-    setOrganizer('')
-    onOpen()
+    setEndHour(endHourFormatted);
+    setAttendees([]);
+    setAttachments([]);
+    setStatus(true);
+    setModifyDate(true);
+    setOrganizer('');
+    onOpen();
   };
 
 
@@ -102,7 +113,7 @@ export default function Calendar({ events, updateCalendar }: CalendarProps) {
     setCalendarId(data.calendarId)
     setTitle(data.summary)
     setDescription(data.description)
-    setModifyDate(false)
+    setModifyDate(false);
     setStartDate(startDate);
     setSEndDate(endtDate);
     setStartHour(startHour.split('-')[0])
@@ -119,8 +130,11 @@ export default function Calendar({ events, updateCalendar }: CalendarProps) {
     onOpen()
   };
   const onSelectView = (view: OnSelectViewData) => {
+
   }
+  
   const onPageChange = (data: OnPageChangeData) => {
+
   }
 
   const handleAddAttendees = (event) => {
@@ -138,12 +152,14 @@ export default function Calendar({ events, updateCalendar }: CalendarProps) {
   }
 
   const handleUpdateEvent = async () => {
+      console.log(startHour)
+      console.log(endHour)
       await api.put('/event', {
         id,
         summary: title,
         description,
-        start: { dateTime: `${startDate}T${startHour}:00-03:00`, timeZone: 'America/Sao_Paulo' },
-        end: { dateTime: `${endDate}T${endHour}:00-03:00`, timeZone: 'America/Sao_Paulo' },
+        start: { dateTime: `${startDate}T${startHour}-03:00`, timeZone: 'America/Sao_Paulo' },
+        end: { dateTime: `${endDate}T${endHour}-03:00`, timeZone: 'America/Sao_Paulo' },
         attendees
       })
       onClose()
@@ -158,11 +174,13 @@ export default function Calendar({ events, updateCalendar }: CalendarProps) {
   }
 
   const handleCreateNewEvent = async () => {
+    console.log(startHour)
+    console.log(endHour)
     await api.post('/event', {
       summary: title,
       description,
-      start: { dateTime: `${startDate}T${startHour}:00-03:00`, timeZone: 'America/Sao_Paulo' },
-      end: { dateTime: `${endDate}T${endHour}:00-03:00`, timeZone: 'America/Sao_Paulo' },
+      start: { dateTime: startHour.length > 5 ? `${startDate}T${startHour}-03:00` : `${startDate}T${startHour}:00-03:00`, timeZone: 'America/Sao_Paulo' },
+      end: { dateTime: endHour.length > 5 ? `${endDate}T${endHour}-03:00` : `${endDate}T${endHour}:00-03:00`, timeZone: 'America/Sao_Paulo' },
       attendees
     })
 
@@ -173,12 +191,6 @@ export default function Calendar({ events, updateCalendar }: CalendarProps) {
   const handleEditDate = () => {
     setModifyDate(true)
   }
-
-  useEffect(() => {
-    const hourNumber = Number(startHour.split(':')[0]) + 1
-    const hourFormatted = hourNumber < 10 ?`0${hourNumber}:00` : `${hourNumber}:00`
-    setEndHour(hourFormatted)
-  }, [startHour])
 
   function handleAlertClick () {
     setAlertOpen(true)
