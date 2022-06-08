@@ -1,7 +1,5 @@
-import { createContext, ReactNode, useEffect, useState } from "react";
-import { format } from 'date-fns'
-import { api } from "../pages/services/api";
-import Router from "next/router";
+import { createContext, ReactNode, useState } from "react";
+import api from "../services/api";
 import { signOut } from "next-auth/react";
 
 interface EventsProviderProps {

@@ -8,8 +8,8 @@ import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, Al
   Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Tag, TagCloseButton, TagLabel, 
   Textarea, useDisclosure, Wrap, WrapItem } from '@chakra-ui/react';
 
-  import { useEffect, useRef, useState } from 'react';
-import { api } from '../../pages/services/api';
+import { useRef, useState } from 'react';
+import api from '../../services/api';
 import DateHourInput from '../DateHourInput';
 import { addHours, format } from 'date-fns';
 

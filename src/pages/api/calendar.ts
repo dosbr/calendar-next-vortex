@@ -24,6 +24,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
         for (let item of response) {
             if (item.status === 'fulfilled') {
+                //@ts-ignore
                 const calendar = calendarList.data.items.find(calendar => calendar.id === item.value.config.url.split('/')[6])
                 calendarEvents.push({
                     ...calendar,
