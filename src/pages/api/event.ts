@@ -9,7 +9,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     if (req.method === 'GET') {
         const { calendarId } = req.query
         try {
-            console.log(req.body)
             const response = await axios.get(`https://www.googleapis.com/calendar/v3/calendars/${calendarId}/events`, {
                 headers: { 'Authorization': `Bearer ${session.accessToken}` },
             })
@@ -23,7 +22,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     } else if (req.method === 'POST') {
         
         try {
-            console.log(req.body)
             const response = await axios.post(`https://www.googleapis.com/calendar/v3/calendars/primary/events`, req.body, {
                 headers: { 'Authorization': `Bearer ${session.accessToken}` },
             })
@@ -37,7 +35,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
     } else if (req.method === 'PUT') {
         try {
-            console.log(req.body)
             const response = await axios.put(`https://www.googleapis.com/calendar/v3/calendars/primary/events/${req.body.id}`, req.body, {
                 headers: { 'Authorization': `Bearer ${session.accessToken}` },
             })

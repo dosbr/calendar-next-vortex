@@ -71,7 +71,6 @@ export default function Calendar({ events, updateCalendar }: CalendarProps) {
     const startHourFormatted = startHour >= 10 ? `${startHour}:00` : `0${startHour}:00`
     const endHourFormatted = endHour >= 10 ? `${endHour}:00` : `0${endHour}:00`
 
-    console.log(startHourFormatted)
     setTitle('');
     setCalendarId('');
     setId('');
@@ -90,21 +89,6 @@ export default function Calendar({ events, updateCalendar }: CalendarProps) {
 
 
   const onEventClick = (data: event) => {
-    console.log({
-      color: data.color,
-      creator: data.creator,
-      endAt: data.endAt,
-      eventType: data.eventType,
-      id: data.id,
-      organizer: data.organizer,
-      reminders: data.reminders,
-      sequence: data.sequence,
-      startAt: data.startAt,
-      status: data.status,
-      summary: data.summary,
-      description: data.description,
-      attendees: data.attendees
-    })
 
     const [startDate, startHour] = data.startAt.split('T')
     const [endtDate, endHour] = data.endAt.split('T')
@@ -152,8 +136,6 @@ export default function Calendar({ events, updateCalendar }: CalendarProps) {
   }
 
   const handleUpdateEvent = async () => {
-      console.log(startHour)
-      console.log(endHour)
       await api.put('/event', {
         id,
         summary: title,
@@ -174,8 +156,6 @@ export default function Calendar({ events, updateCalendar }: CalendarProps) {
   }
 
   const handleCreateNewEvent = async () => {
-    console.log(startHour)
-    console.log(endHour)
     await api.post('/event', {
       summary: title,
       description,

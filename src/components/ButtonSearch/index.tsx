@@ -18,7 +18,6 @@ export default function ButtonSearch({events} : ButtonSearchProps)  {
 
     async function handleSearch(data) {
         const response = await api.get(`/event?calendarId=${data.calendarId}`)
-        console.log(response)
         if(response.status === 200) {
             setSearchList(response.data)
         }

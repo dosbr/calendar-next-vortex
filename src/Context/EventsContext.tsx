@@ -72,11 +72,6 @@ export function EventsProvider({ children }: EventsProviderProps) {
           })))
         }
 
-        console.log(response.map(({ startAt }) => {
-          if (startAt) {
-            console.log(format(new Date(startAt), "yyyy-MM-dd'T'kk:mm:ssxxx"))
-          }
-        }))
         setEvents(response)
       }
     } catch {

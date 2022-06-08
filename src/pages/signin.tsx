@@ -1,8 +1,7 @@
 import { GetServerSideProps } from "next";
-import { getSession, useSession } from "next-auth/react"
+import { getSession } from "next-auth/react"
 
-import styles from './home.module.scss';
-import { Box, Container, Flex, Image, Text } from "@chakra-ui/react";
+import { Flex, Image } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 import { SignInButton } from "../components/SignInButton";
