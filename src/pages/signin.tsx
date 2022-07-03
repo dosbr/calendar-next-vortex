@@ -27,7 +27,7 @@ export default function SignIn({ signIn } : HomeProps) {
       h="100vh"
       bg="var(--gray-800)"
     >
-      <Flex flexDirection="column"  alignItems="center">
+      <Flex flexDirection="column"  alignItems="center" >
         <Image src="/imagens/logo.png" alt="jm.consultoria" w="150px" mb="5rem" />
         <SignInButton />
       </Flex>

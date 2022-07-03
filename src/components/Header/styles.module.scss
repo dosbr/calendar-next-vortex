@@ -16,3 +16,13 @@
         margin-left: 1rem;
     }
 }
+
+.headerContent button:last-child {
+    @media (max-width: 500px) {
+        position: absolute;
+        bottom: 1rem;
+        right: 1rem;
+
+        z-index: 3;
+    }
+}
