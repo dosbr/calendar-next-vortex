@@ -9,7 +9,7 @@ import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, Al
   Textarea, useDisclosure, Wrap, WrapItem } from '@chakra-ui/react';
 
   import { useEffect, useRef, useState } from 'react';
-import { api } from '../../pages/services/api';
+import { api } from '../../services/api';
 import DateHourInput from '../DateHourInput';
 import { addHours, format } from 'date-fns';
 

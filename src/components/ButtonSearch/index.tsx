@@ -2,7 +2,7 @@ import { Accordion, AccordionButton, AccordionIcon, AccordionItem, AccordionPane
 import { useRef, useState } from "react"
 import { useForm } from "react-hook-form"
 import { RiSearchLine } from "react-icons/ri"
-import { api } from "../../pages/services/api"
+import { api } from "../../services/api"
 
 
 interface ButtonSearchProps {

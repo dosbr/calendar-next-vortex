@@ -1,6 +1,6 @@
 import { createContext, ReactNode, useEffect, useState } from "react";
 import { format } from 'date-fns'
-import { api } from "../pages/services/api";
+import { api } from "../services/api";
 import Router from "next/router";
 import { signOut } from "next-auth/react";
 
